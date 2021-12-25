@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/player2"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="180dp"
         android:layout_marginHorizontal="40dp"
         android:background="@drawable/clock_button"
         app:layout_constraintBottom_toTopOf="@id/options"
@@ -41,18 +41,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/player2">
 
-        <Button
+        <ImageButton
             android:id="@+id/settings_button"
             android:layout_width="60dp"
+            android:src="@drawable/ic_baseline_settings_24"
             android:layout_height="60dp" />
 
-        <Button
-            android:id="@+id/pause_button"
+        <ImageButton
+            android:id="@+id/reset_button"
+            android:src="@drawable/ic_baseline_autorenew_24"
             android:layout_width="60dp"
             android:layout_height="60dp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/play_button"
+            android:src="@drawable/ic_baseline_play_arrow_24"
             android:layout_width="60dp"
             android:layout_height="60dp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -60,7 +63,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/player1"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="180dp"
         android:layout_marginHorizontal="40dp"
         android:background="@drawable/clock_button"
         app:layout_constraintBottom_toBottomOf="parent"
