@@ -2,6 +2,7 @@ package com.fzanutto.simplechessclock
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.fzanutto.simplechessclock.databinding.ActivityMainBinding
 import java.util.Timer
@@ -12,9 +13,10 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.TimePickerDialogListe
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var timePickerDialog: TimePickerDialog
-    private var activePlayer = 1
-    private var player1TimerMilli: Long = 180 * 1000
-    private var player2TimerMilli: Long = 180 * 1000
+    private var activePlayer = PlayerTurn.None
+    private var originalTime: Long = 180 * 1000
+    private var player1TimerMilli = originalTime
+    private var player2TimerMilli = originalTime
     private var lastUpdateTick = System.currentTimeMillis()
     private var isRunning = false
     private var timer = Timer()
@@ -59,7 +61,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.TimePickerDialogListe
         if (!isRunning) return
 
         val currentTime = System.currentTimeMillis()
-        if (activePlayer == 1) {
+        if (activePlayer == PlayerTurn.PlayerOne) {
             player1TimerMilli -= currentTime - lastUpdateTick
             Log.d("CURRENTTIME", "PLAYER 1 time: $player1TimerMilli")
         } else {
@@ -74,6 +76,14 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.TimePickerDialogListe
         timer.schedule(timerTask, 0, 100)
     }
 
+    private fun updatePlayPauseButton() {
+        val button = binding.playButton
+        if (isRunning) {
+            button.setImageResource(R.drawable.ic_baseline_pause_24)
+        } else {
+            button.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+        }
+    }
 
     private fun setClickListeners() {
         binding.apply {
@@ -82,31 +92,48 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.TimePickerDialogListe
             }
 
             playButton.setOnClickListener {
-                lastUpdateTick = System.currentTimeMillis()
-                isRunning = true
+                if (activePlayer != PlayerTurn.None) {
+                    lastUpdateTick = System.currentTimeMillis()
+                    isRunning = !isRunning
+                    updatePlayPauseButton()
+                }
             }
 
-            pauseButton.setOnClickListener {
+            resetButton.setOnClickListener {
                 isRunning = false
+                player1TimerMilli = originalTime
+                player2TimerMilli = originalTime
+                updatePlayPauseButton()
+                updateUI()
             }
 
             player1.setOnClickListener {
-                updateTimers()
-                updateUI()
-                activePlayer = 2
+                if (activePlayer != PlayerTurn.PlayerTwo){
+                    lastUpdateTick = System.currentTimeMillis()
+                    isRunning = true
+                    updatePlayPauseButton()
+                    updateTimers()
+                    updateUI()
+                    activePlayer = PlayerTurn.PlayerTwo
+                }
             }
 
             player2.setOnClickListener {
-                updateTimers()
-                updateUI()
-                activePlayer = 1
+                if (activePlayer != PlayerTurn.PlayerOne){
+                    lastUpdateTick = System.currentTimeMillis()
+                    isRunning = true
+                    updatePlayPauseButton()
+                    updateTimers()
+                    updateUI()
+                    activePlayer = PlayerTurn.PlayerOne
+                }
             }
         }
     }
 
     override fun onPositiveClick(minutes: Int, seconds: Int) {
         val timeInMilli = (minutes * 60 + seconds) * 1000L
-
+        originalTime = timeInMilli
         player1TimerMilli = timeInMilli
         player2TimerMilli = timeInMilli
     }
