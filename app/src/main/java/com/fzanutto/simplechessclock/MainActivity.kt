@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private var player1TimerMili: Long = 120 * 1000
     private var player2TimerMili: Long = 160 * 1000
     private var lastUpdateTick = System.currentTimeMillis()
+    private var isRunning = false
     private var timer = Timer()
     private var timerTask = object : TimerTask() {
         override fun run() {
@@ -26,6 +27,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setClickListeners()
+
+        setTimerTask()
+    }
 
     private fun convertMiliSecondsToMinutesString(miliseconds: Long): String {
         val seconds = miliseconds / 1000
@@ -42,19 +53,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setClickListeners()
-
-        setTimerTask()
-    }
-
     private fun updateTimers() {
+        if (!isRunning) return
+
         val currentTime = System.currentTimeMillis()
         if (activePlayer == 1) {
             player1TimerMili -= currentTime - lastUpdateTick
@@ -78,9 +79,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             playButton.setOnClickListener {
+                lastUpdateTick = System.currentTimeMillis()
+                isRunning = true
             }
 
             pauseButton.setOnClickListener {
+                isRunning = false
             }
 
             player1.setOnClickListener {
