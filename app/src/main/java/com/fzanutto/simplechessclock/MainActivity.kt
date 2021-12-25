@@ -2,7 +2,6 @@ package com.fzanutto.simplechessclock
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.fzanutto.simplechessclock.databinding.ActivityMainBinding
 import java.util.Timer
