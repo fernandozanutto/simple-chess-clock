@@ -23,6 +23,7 @@ class TimePickerDialog: DialogFragment() {
 
         binding.minutesPicker.minValue = 0
         binding.minutesPicker.maxValue = 120
+        binding.minutesPicker.value = 3
 
         binding.secondsPicker.minValue = 0
         binding.secondsPicker.maxValue = 59
